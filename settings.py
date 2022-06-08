@@ -7,10 +7,10 @@ import os
 # --------------- 登录账号(根据自己 企业微信 账号填写) --------------- #
 
 # 企业微信相关的ID (必填项)
-CORPID = 'wp58yYCQAAA2tAN_zvV-Thr_b_JDPqEg'
+CORPID = 'wpxxxxxxxxxxxx_xxx-xxx_x_xxxxxx'
 
 # 自己的 id, 设置仅自己可见 (必填项)
-ROLE_PERSON_ID = '24451091'
+ROLE_PERSON_ID = '24xxxxx1'
 
 
 

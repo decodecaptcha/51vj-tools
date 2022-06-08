@@ -1,3 +1,5 @@
 requests
 loguru
 APScheduler
+psutil
+subprocess.run
