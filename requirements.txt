@@ -1,5 +1,5 @@
+APScheduler==3.7.0
 requests
 loguru
-APScheduler
 psutil
 subprocess.run

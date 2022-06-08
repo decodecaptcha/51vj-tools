@@ -27,6 +27,18 @@ from settings import (QRCODE_PATH, COOKIE_FILE_PATH, CORPID, JOB_NUMBER, BUSINES
                       ROLE_PERSON_ID)
 
 
+print(r"""
+    ____  _       _    _              _     
+| ___|/ |_   _(_)  | |_ ___   ___ | |___ 
+|___ \| \ \ / / |  | __/ _ \ / _ \| / __|
+    ___) | |\ V /| |  | || (_) | (_) | \__ \
+|____/|_| \_/_/ |   \__\___/ \___/|_|___/
+            |__/  
+author: aiden2048                                     
+address: https://github.com/aiden2048
+""")
+
+
 def read_file(abspath):
     try:
         with open(abspath, 'r') as f:
@@ -50,6 +62,8 @@ def write_file(abspath, dict_data: dict):
 
 
 def login():
+    logger.debug("检测到未登录...")
+
     corpid = CORPID
     show = Show()
     key = qrConnect(corpid)
@@ -98,24 +112,9 @@ def login():
 
 
 def job():
-    print(r"""
-     ____  _       _    _              _     
-    | ___|/ |_   _(_)  | |_ ___   ___ | |___ 
-    |___ \| \ \ / / |  | __/ _ \ / _ \| / __|
-     ___) | |\ V /| |  | || (_) | (_) | \__ \
-    |____/|_| \_/_/ |   \__\___/ \___/|_|___/
-                |__/  
-    author: aiden2048                                     
-    address: https://github.com/aiden2048
-    """)
-
-    if not read_file(COOKIE_FILE_PATH):
-        login()
-
     _cookies = read_file(COOKIE_FILE_PATH)
     _corpid = CORPID
     delay = JOB_DELAY_TIME
-    logger.debug("==================== 定时任务已开启...")
 
     # 每日签到
     logger.debug("每日签到已开启...")
@@ -160,7 +159,11 @@ def job():
 
 
 if __name__ == '__main__':
-    # 定时任务
+    logger.debug("==================== 程序启动...")
+    if not read_file(COOKIE_FILE_PATH):
+        login()
+    logger.debug("检测到已登录...")
+    logger.debug("定时任务已开启...")
     scheduler = BlockingScheduler()
     scheduler.add_job(job, 'cron', hour=JOB_HOUR, minute=JOB_MINUTE)
     scheduler.start()
