@@ -30,6 +30,9 @@ cd 51vj-tools
 ```bash
 pip install -r requirements.txt
 ```
+
+在 settings.py 文件中 填写自己的 CORPID, ROLE_PERSON_ID (必填项)
+
 运行程序
 ```bash
 python run.py

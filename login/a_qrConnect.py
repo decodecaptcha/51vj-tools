@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 import re
-import time
 import requests
 from loguru import logger
-from settings import CORPID
 
 
-def qrConnect():
+def qrConnect(corpid):
     """二维码
     
     :param wxd_appid: _description_
     :return: _description_
     """
-    corpid = CORPID
     redirect_uri = f'https://qy.51vj.cn/wechat/login?goto=https://qy.51vj.cn/app/home/culture?corpid={corpid}&appid=1002&corpid={corpid}&appid=1002&corpid={corpid}&appid=1002'
     url = 'https://open.work.weixin.qq.com/wwopen/sso/3rd_qrConnect'
     params = {
@@ -36,8 +33,3 @@ def qrConnect():
     key =  result[0] if result else ''
     logger.debug(f"key: {key}")
     return key
-
-
-# if __name__ == '__main__':
-#     key = qrConnect()
-#     print(key)

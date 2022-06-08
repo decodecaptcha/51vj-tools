@@ -2,7 +2,6 @@
 import time
 import requests
 from loguru import logger
-# from settings import CORPID, USER_COOKIES
 
 
 def business_prise(business_id, business_type, business_sec_id, corpid, cookies):
@@ -15,8 +14,6 @@ def business_prise(business_id, business_type, business_sec_id, corpid, cookies)
     :param cookies:
     """
     timestamp = int(time.time() * 1000)
-    # corpid = CORPID
-    # _cookie = USER_COOKIES
 
     headers = {
         'Accept': 'application/json;charset=utf-8',
@@ -24,7 +21,6 @@ def business_prise(business_id, business_type, business_sec_id, corpid, cookies)
         'Accept-Language': 'zh-CN,zh;q=0.9',
         'Content-Type': 'application/x-www-form-urlencoded',
         'Connection': 'keep-alive',
-        # 'cookie': _cookie,
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36'
     }
 
@@ -42,16 +38,7 @@ def business_prise(business_id, business_type, business_sec_id, corpid, cookies)
         'status': '1'
     }
     payload = {}
-    response = requests.put(url, params=params, headers=headers, cookies=cookies, data=payload)
+    response = requests.put(
+        url, params=params, headers=headers, cookies=cookies, data=payload)
 
     logger.debug(response.text)
-
-
-# if __name__ == '__main__':
-#     business_id = 'xxxxxx'
-#     business_type = '40501'
-#     business_sec_id = '0'
-#     business_prise(business_id, business_type, business_sec_id)
-
-# 成功响应:
-# {"success": true,"msg": "点赞成功","priseRecord": [...}

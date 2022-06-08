@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
 import time
-import os
 from time import sleep
 from apscheduler.schedulers.blocking import BlockingScheduler
 from loguru import logger
@@ -23,25 +22,25 @@ from business.comment_prise import comment_prise
 from business.community import community
 from business.reader import reader
 
-from settings import CORPID
-from settings import QRCODE_PATH, COOKIE_FILE_PATH
-from settings import (JOB_NUMBER, BUSINESS_SEC_ID, BUSINESS_TYPE, CHANNEL_ID,
-                        COMMENT_CONTENT, JOB_DELAY_TIME, JOB_HOUR, JOB_MINUTE,
-                        ROLE_PERSON_ID)
+from settings import (QRCODE_PATH, COOKIE_FILE_PATH, CORPID, JOB_NUMBER, BUSINESS_SEC_ID, BUSINESS_TYPE, CHANNEL_ID,
+                      COMMENT_CONTENT, JOB_DELAY_TIME, JOB_HOUR, JOB_MINUTE,
+                      ROLE_PERSON_ID)
+
 
 def read_file(abspath):
     try:
         with open(abspath, 'r') as f:
             text = f.read()
             dict_data = json.loads(text)
-            logger.debug(f'read_file: {COOKIE_FILE_PATH}, text: {text}, status: successful')
+            logger.debug(
+                f'read_file: {COOKIE_FILE_PATH}, text: {text}, status: successful')
             return dict_data
     except Exception as e:
         logger.debug(e)
         return None
 
 
-def write_file(abspath, dict_data:dict):
+def write_file(abspath, dict_data: dict):
     try:
         with open(abspath, 'w') as f:
             f.write(json.dumps(dict_data))
@@ -51,8 +50,9 @@ def write_file(abspath, dict_data:dict):
 
 
 def login():
+    corpid = CORPID
     show = Show()
-    key = qrConnect()
+    key = qrConnect(corpid)
     content = qrImg(key)
     show.save_img(content, QRCODE_PATH)
     show.show_img(QRCODE_PATH)
@@ -62,7 +62,7 @@ def login():
 
     # 轮询规则: 每x秒轮询一次
     while 1:
-        callback = login_auth_code(key)
+        callback = login_auth_code(key, corpid)
 
         # 未扫码 {"status":"QRCODE_SCAN_NEVER","auth_code":""}
         if callback.get("status") == "QRCODE_SCAN_NEVER":
@@ -92,7 +92,7 @@ def login():
 
     show.close_img()
 
-    cookies = login_cookies(auth_code)
+    cookies = login_cookies(auth_code, corpid)
     logger.debug(f'cookies: {cookies}')
     write_file(COOKIE_FILE_PATH, str(cookies))
 
@@ -129,7 +129,7 @@ def job():
     # 每日动态
     logger.debug("每日动态已开启...")
     for index in range(1, JOB_NUMBER+1):
-        
+
         role_person_id = ROLE_PERSON_ID
         channel_id = CHANNEL_ID
         business_id = community(role_person_id, channel_id, _corpid, _cookies)
@@ -146,7 +146,8 @@ def job():
 
         business_type = BUSINESS_TYPE
         business_sec_id = BUSINESS_SEC_ID
-        business_prise(business_id, business_type, business_sec_id, _corpid, _cookies)
+        business_prise(business_id, business_type,
+                       business_sec_id, _corpid, _cookies)
         sleep(delay)
 
         comment_prise(comment_id, _corpid, _cookies)
@@ -159,8 +160,7 @@ def job():
 
 
 if __name__ == '__main__':
-    job()
-    # # 定时任务
-    # scheduler = BlockingScheduler()
-    # scheduler.add_job(job, 'cron', hour=JOB_HOUR, minute=JOB_MINUTE)
-    # scheduler.start()
+    # 定时任务
+    scheduler = BlockingScheduler()
+    scheduler.add_job(job, 'cron', hour=JOB_HOUR, minute=JOB_MINUTE)
+    scheduler.start()

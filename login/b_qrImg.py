@@ -24,23 +24,3 @@ def qrImg(key):
     response = requests.get(url, params=params, headers=headers, data=payload)
     logger.debug(response.status_code)
     return response.content
-
-    
-
-
-# if __name__ == '__main__':
-#     key = '357236e854ffaf23'
-#     content = qrImg(key)
-#     # plt.imshow(plt.imread(BytesIO(content)))
-#     # plt.axis('off')
-#     # plt.show()
-
-#     img = Image.open(BytesIO(content))
-#     plt.imshow(img)
-#     plt.axis('off')
-#     # block=False 开启交互模式
-#     plt.show(block=False)
-#     input()
-#     plt.close()
-
-
