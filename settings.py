@@ -1,16 +1,24 @@
 # -*- coding: utf-8 -*-
 # settings.py
 
-# --------------- 登录账号(必填, 根据自己 企业微信 账号填写) --------------- #
-# 企业微信相关的ID 
-CORPID = 'wp58xxxxxxxxxxx_xxx-xxx_x_xxxxEg'
+import os
 
-# 登录账号获取 cookie (必填项)
-USER_COOKIES = 'rememberme-wp58xxxxxxxxxxx_xxx-xxx_x_xxxxEg=xxx; JSESSIONID=wp58xxxxxxxxxxx_xxx-xxx_x_xxxxEg_xxx'
+
+# --------------- 登录账号(根据自己 企业微信 账号填写) --------------- #
+
+# 企业微信相关的ID (必填项)
+CORPID = 'wp58yYCQAAA2tAN_zvV-Thr_b_JDPqEg'
 
 # 自己的 id, 设置仅自己可见 (必填项)
-ROLE_PERSON_ID = '24xxxxx1'
+ROLE_PERSON_ID = '24451091'
 
+
+
+# 二维码保存路径
+QRCODE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 'login', 'qrcode', 'qrcode.png'))
+
+# cookies 保存路径
+COOKIE_FILE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 'login', 'cookie', 'cookie.txt'))
 
 # --------------- 发布动态 (一般不修改) --------------- #
 # 话题 id, 如 932765 对应话题 "吃瓜群众"
@@ -25,10 +33,9 @@ BUSINESS_TYPE = '40501'
 # 目标动态的第 x 条评论 x=0 表示第一条评论
 BUSINESS_SEC_ID = '0'
 
-
 # --------------- 定时任务 (一般不修改) --------------- #
 # 任务之间间隔时间
-JOB_DELAY_TIME = 10
+JOB_DELAY_TIME = 5
 
 # 任务次数, 默认执行3次, 详情查看《积分规则.html》
 JOB_NUMBER = 3

@@ -3,19 +3,21 @@ import json
 import time
 import requests
 from loguru import logger
-from settings import CORPID, USER_COOKIES
+# from settings import CORPID, USER_COOKIES
 
 
-def community(role_person_id, channel_id):
+def community(role_person_id, channel_id, corpid, cookies):
     """发布动态
 
     :param role_person_id: 自己的 id, 设置仅自己可见
     :param channel_id: 话题 id, 如 932765 对应话题 "吃瓜群众"
+    :param corpid:
+    :param cookies:
     :return: 动态 id 
     """
     timestamp = int(time.time() * 1000)
-    corpid = CORPID
-    _cookie = USER_COOKIES
+    # corpid = CORPID
+    # _cookie = USER_COOKIES
 
     params = {
         '_': f'{timestamp}',
@@ -33,7 +35,7 @@ def community(role_person_id, channel_id):
         'Accept-Language': 'zh-CN,zh;q=0.9',
         'Content-Type': 'application/json',
         'Connection': 'keep-alive',
-        'cookie': _cookie,
+        # 'cookie': _cookie,
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36'
     }
 
@@ -63,7 +65,7 @@ def community(role_person_id, channel_id):
         "content_summary": "测试内容\n"
     })
 
-    response = requests.put(url, params=params, headers=headers, data=payload)
+    response = requests.put(url, params=params, headers=headers, cookies=cookies, data=payload)
     logger.debug(response.text)
     json_data = json.loads(response.text)
     business_id = json_data.get("community").get("id")

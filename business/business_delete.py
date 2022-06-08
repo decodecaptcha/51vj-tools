@@ -2,23 +2,25 @@
 import time
 import requests
 from loguru import logger
-from settings import CORPID, USER_COOKIES
+# from settings import CORPID, USER_COOKIES
 
-def business_delete(business_id):
-    """删除评论
+def business_delete(business_id, corpid, cookies):
+    """删除动态
 
     :param business_id: _description_
+    :param corpid:
+    :param cookies:
     """
     timestamp = int(time.time() * 1000)
-    corpid = CORPID
-    _cookie = USER_COOKIES
+    # corpid = CORPID
+    # _cookie = USER_COOKIES
     headers = {
         'Accept': 'application/json;charset=utf-8',
         'Accept-Encoding': 'gzip, deflate, br',
         'Accept-Language': 'zh-CN,zh;q=0.9',
         'Content-Type': 'application/json',
         'Connection': 'keep-alive',
-        'cookie': _cookie,
+        # 'cookie': _cookie,
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36'
     }
     url = 'https://qy.51vj.cn/club/'
@@ -33,8 +35,8 @@ def business_delete(business_id):
 
     payload = {}
     response = requests.delete(url=url, params=params,
-                                headers=headers, data=payload)
-    print(response.text)
+                                headers=headers, cookies=cookies, data=payload)
+    logger.debug(response.text)
 
 
 # if __name__ == '__main__':
