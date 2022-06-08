@@ -62,8 +62,6 @@ def write_file(abspath, dict_data: dict):
 
 
 def login():
-    logger.debug("检测到未登录...")
-
     corpid = CORPID
     show = Show()
     key = qrConnect(corpid)
@@ -161,6 +159,7 @@ def job():
 if __name__ == '__main__':
     logger.debug("==================== 程序启动...")
     if not read_file(COOKIE_FILE_PATH):
+        logger.debug("检测到未登录...")
         login()
     logger.debug("检测到已登录...")
     logger.debug("定时任务已开启...")
