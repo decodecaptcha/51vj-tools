@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
-import time
+import datetime
 from time import sleep
 from apscheduler.schedulers.blocking import BlockingScheduler
 from loguru import logger
@@ -117,9 +117,9 @@ def job():
     # 每日签到
     logger.debug("每日签到已开启...")
     is_sign_in(_corpid, _cookies)
-    time.sleep(delay)
+    sleep(delay)
     get_sign_in(_corpid, _cookies)
-    time.sleep(delay)
+    sleep(delay)
     post_sign_in(_corpid, _cookies)
     logger.debug("每日签到已完成...")
 
@@ -154,6 +154,10 @@ def job():
         logger.debug(f"已完成任务次数: {index}")
 
     logger.debug("每日任务, 已完成.")
+
+    tomorrow = datetime.date.today() + datetime.timedelta(days=1)
+    strtomorrow = tomorrow.strftime('%Y-%m-%d')
+    logger.debug(f"下次执行时间：{strtomorrow} {JOB_HOUR}:{JOB_MINUTE}")
 
 
 if __name__ == '__main__':
