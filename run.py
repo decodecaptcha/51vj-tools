@@ -28,12 +28,12 @@ from settings import (QRCODE_PATH, COOKIE_FILE_PATH, CORPID, JOB_NUMBER, BUSINES
 
 
 print(r"""
-    ____  _       _    _              _     
-| ___|/ |_   _(_)  | |_ ___   ___ | |___ 
-|___ \| \ \ / / |  | __/ _ \ / _ \| / __|
-    ___) | |\ V /| |  | || (_) | (_) | \__ \
-|____/|_| \_/_/ |   \__\___/ \___/|_|___/
-            |__/  
+ ____  _       _       _              _     
+| ___|/ |_   _(_)     | |_ ___   ___ | |___ 
+|___ \| \ \ / / |_____| __/ _ \ / _ \| / __|
+ ___) | |\ V /| |_____| || (_) | (_) | \__ \
+|____/|_| \_/_/ |      \__\___/ \___/|_|___/
+            |__/                            
 author: aiden2048                                     
 address: https://github.com/aiden2048
 """)
@@ -104,9 +104,9 @@ def login():
 
     show.close_img()
 
-    cookies = login_cookies(auth_code, corpid)
+    cookies = login_cookies(auth_code, corpid) or {}
     logger.debug(f'cookies: {cookies}')
-    write_file(COOKIE_FILE_PATH, str(cookies))
+    write_file(COOKIE_FILE_PATH, cookies)
 
 
 def job():
@@ -159,10 +159,11 @@ def job():
 if __name__ == '__main__':
     logger.debug("==================== 程序启动...")
     if not read_file(COOKIE_FILE_PATH):
-        logger.debug("检测到未登录...")
+        logger.debug("登录状态: 检测到未登录...")
         login()
-    logger.debug("检测到已登录...")
-    logger.debug("定时任务已开启...")
+    logger.debug("登录状态: 检测到已登录...")
+    logger.debug(f"定时任务: 已开启...")
+    logger.debug(f"执行时间: 每日 {JOB_HOUR}:{JOB_MINUTE}")
     scheduler = BlockingScheduler()
     scheduler.add_job(job, 'cron', hour=JOB_HOUR, minute=JOB_MINUTE)
     scheduler.start()
