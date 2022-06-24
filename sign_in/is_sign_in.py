@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 import time
 import requests
 from loguru import logger
@@ -25,5 +26,5 @@ def is_sign_in(corpid, cookies):
 
     response = requests.get(
         url, params=params, headers=headers, cookies=cookies, data=payload)
-
+    json.loads(response.text)
     logger.debug(response.text)
