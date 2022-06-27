@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import json
 import time
+
 import requests
 from loguru import logger
+from settings import COMMENT, COMMENT_SUMMARY, TITLE
 
 
 def community(role_person_id, channel_id, corpid, cookies):
@@ -38,8 +40,8 @@ def community(role_person_id, channel_id, corpid, cookies):
     url = 'https://qy.51vj.cn/club/'
 
     payload = json.dumps({
-        "title": "测试标题",
-        "content": "<p>测试内容</p>",
+        "title": f"{TITLE}",
+        "content": f"<p>{COMMENT}</p>",
         "roles": [
             # 仅对某人开放动态, 设置本人唯一id, 如 "id": 24xxxxx1
             f"ROLE_PERSON_{role_person_id}"
@@ -58,7 +60,7 @@ def community(role_person_id, channel_id, corpid, cookies):
         "links": [],
         "wechat_of_pc": 1,
         "content_type": 1,
-        "content_summary": "测试内容\n"
+        "content_summary": f"{COMMENT_SUMMARY}\n"
     })
 
     response = requests.put(

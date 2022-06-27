@@ -24,8 +24,19 @@ COOKIE_FILE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 'logi
 # 话题 id, 如 932765 对应话题 "吃瓜群众"
 CHANNEL_ID = '932765'
 
+TEXT = '每日动态拨测每日动态拨测'
+
+# 标题
+TITLE = TEXT
+
+# 内容
+COMMENT = TEXT
+
+# 消息摘要
+COMMENT_SUMMARY = TEXT
+
 # 评论内容 ≥10字
-COMMENT_CONTENT = '测试测试测试测试测试测试测试测试'
+COMMENT_CONTENT = TEXT
 
 # 目标动态的类型
 BUSINESS_TYPE = '40501'
@@ -40,6 +51,6 @@ JOB_DELAY_TIME = 5
 # 任务次数, 默认执行3次, 详情查看 images/《积分规则.html》
 JOB_NUMBER = 3
 
-# 默认是每天的10：30 分执行任务(24小时制, 可自定义)
-JOB_HOUR = 10
+# 默认是每天的9：30 分执行任务(24小时制, 可自定义)
+JOB_HOUR = 9
 JOB_MINUTE = 30
