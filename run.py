@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 import datetime
+import random
+import string
 from logging import exception
 from time import sleep
 from apscheduler.schedulers.blocking import BlockingScheduler
@@ -16,7 +18,7 @@ from sign_in.get_sign_in import get_sign_in
 from sign_in.is_sign_in import is_sign_in
 from sign_in.post_sign_in import post_sign_in
 
-from business.business_delete import business_delete
+# from business.business_delete import business_delete
 from business.business_prise import business_prise
 from business.comment import comment
 from business.comment_prise import comment_prise
@@ -24,8 +26,7 @@ from business.community import community
 from business.reader import reader
 
 from settings import (QRCODE_PATH, COOKIE_FILE_PATH, CORPID, JOB_NUMBER, BUSINESS_SEC_ID, BUSINESS_TYPE, CHANNEL_ID,
-                      COMMENT_CONTENT, JOB_DELAY_TIME, JOB_HOUR, JOB_MINUTE,
-                      ROLE_PERSON_ID)
+                        JOB_DELAY_TIME, JOB_HOUR, JOB_MINUTE, ROLE_PERSON_ID)
 
 
 print(r"""
@@ -149,31 +150,43 @@ def job():
     logger.debug("每日动态任务已开启...")
     try:
         for index in range(1, JOB_NUMBER+1):
-            role_person_id = ROLE_PERSON_ID
-            channel_id = CHANNEL_ID
-            business_id = community(role_person_id, channel_id, _corpid, _cookies)
+            # 生成指定长度的随机字符串
+            text = ''.join(random.sample(string.ascii_letters + string.digits, 20))
+            # 标题
+            title = text
+            # 内容
+            content = text
+            # 消息摘要
+            content_summary = text
+            # 评论内容 ≥10字
+            comment_content = text
+
+            business_id = community(title=title, content=content, content_summary=content_summary,
+                                    role_person_id=ROLE_PERSON_ID, channel_id=CHANNEL_ID, corpid=_corpid, cookies=_cookies)
             logger.debug("business_id: ", business_id)
             sleep(delay)
 
             reader(business_id, _corpid, _cookies)
             sleep(delay)
 
-            comment_content = COMMENT_CONTENT
-            comment_id = comment(business_id, comment_content, _corpid, _cookies)
+            comment_id = comment(business_id=business_id, business_type=BUSINESS_TYPE,
+                                    content=comment_content, corpid=_corpid, cookies=_cookies)
             logger.debug("comment_id", comment_id)
             sleep(delay)
 
-            business_type = BUSINESS_TYPE
-            business_sec_id = BUSINESS_SEC_ID
-            business_prise(business_id, business_type,
-                            business_sec_id, _corpid, _cookies)
+            business_prise(business_id=business_id, business_type=BUSINESS_TYPE,
+                            business_sec_id=BUSINESS_SEC_ID, corpid=_corpid, cookies=_cookies)
             sleep(delay)
 
-            comment_prise(comment_id, _corpid, _cookies)
-            sleep(delay)
+            comment_prise(comment_id=comment_id,
+                            corpid=_corpid, cookies=_cookies)
+            # sleep(delay)
 
-            business_delete(business_id, _corpid, _cookies)
+            # business_delete(business_id=business_id,
+            #                 corpid=_corpid, cookies=_cookies)
+
             logger.debug(f"已完成动态任务次数: {index}")
+
     except json.JSONDecodeError as e:
         logger.debug("每日动态任务失败，Error：", e)
         clear_cookie(COOKIE_FILE_PATH)
@@ -186,7 +199,7 @@ def job():
 
 
 if __name__ == '__main__':
-    
+
     logger.debug("==================== 程序启动...")
     if not read_file(COOKIE_FILE_PATH):
         logger.debug("登录状态: 检测到未登录...")

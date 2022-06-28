@@ -4,10 +4,10 @@ import time
 
 import requests
 from loguru import logger
-from settings import COMMENT, COMMENT_SUMMARY, TITLE
+# from settings import COMMENT, COMMENT_SUMMARY, TITLE
 
 
-def community(role_person_id, channel_id, corpid, cookies):
+def community(title, content, content_summary, role_person_id, channel_id, corpid, cookies):
     """发布动态
 
     :param role_person_id: 自己的 id, 设置仅自己可见
@@ -40,8 +40,8 @@ def community(role_person_id, channel_id, corpid, cookies):
     url = 'https://qy.51vj.cn/club/'
 
     payload = json.dumps({
-        "title": f"{TITLE}",
-        "content": f"<p>{COMMENT}</p>",
+        "title": f"{title}",
+        "content": f"<p>{content}</p>",
         "roles": [
             # 仅对某人开放动态, 设置本人唯一id, 如 "id": 24xxxxx1
             f"ROLE_PERSON_{role_person_id}"
@@ -60,7 +60,7 @@ def community(role_person_id, channel_id, corpid, cookies):
         "links": [],
         "wechat_of_pc": 1,
         "content_type": 1,
-        "content_summary": f"{COMMENT_SUMMARY}\n"
+        "content_summary": f"{content_summary}\n"
     })
 
     response = requests.put(

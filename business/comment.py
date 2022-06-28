@@ -5,7 +5,7 @@ import requests
 from loguru import logger
 
 
-def comment(business_id, content, corpid, cookies):
+def comment(business_id, business_type, content, corpid, cookies):
     """评论动态
 
     :param business_id: 动态id
@@ -26,7 +26,7 @@ def comment(business_id, content, corpid, cookies):
         'appid': '31',
         'parentid': '1002',
         'business-id': f'{business_id}',
-        'business-type': '40501',
+        'business-type': f'{business_type}',
         'business-sec-id': '0',
         'comment-content': f'{_content}',
         'is-anonymity': '0',
