@@ -3,7 +3,6 @@ import json
 import datetime
 import random
 import string
-from logging import exception
 from time import sleep
 from apscheduler.schedulers.blocking import BlockingScheduler
 from loguru import logger
@@ -24,6 +23,10 @@ from business.comment import comment
 from business.comment_prise import comment_prise
 from business.community import community
 from business.reader import reader
+
+from care.care_comment import care_comment
+from care.care_delete import care_delete
+
 
 from settings import (QRCODE_PATH, COOKIE_FILE_PATH, CORPID, JOB_NUMBER, BUSINESS_SEC_ID, BUSINESS_TYPE, CHANNEL_ID,
                         JOB_DELAY_TIME, JOB_HOUR, JOB_MINUTE, ROLE_PERSON_ID)
@@ -132,18 +135,33 @@ def job():
     _corpid = CORPID
     delay = JOB_DELAY_TIME
 
-    # 每日签到
-    logger.debug("每日签到任务已开启...")
+    # 签到
+    logger.debug('"签到"任务已开启...')
     try:
         is_sign_in(_corpid, _cookies)
         sleep(delay)
         get_sign_in(_corpid, _cookies)
         sleep(delay)
         post_sign_in(_corpid, _cookies)
-        logger.debug("每日签到任务已完成...")
+        logger.debug('"每日签到"任务已完成...')
     except json.JSONDecodeError as e:
-        logger.debug("每日签到任务失败，Error：", e)
+        logger.debug('"签到"任务失败, 需要重新登录, Error：', e)
+        # 清除cookie, 重新登录
         clear_cookie(COOKIE_FILE_PATH)
+        input()
+
+    # 送祝福
+    staff_id = ROLE_PERSON_ID
+    logger.debug('"送祝福"任务已开启...')
+    try:
+        for index in range(1, 3+1):
+            comment_id = care_comment(staff_id, _corpid, _cookies)
+            sleep(delay)
+            care_delete(comment_id, _corpid, _cookies)
+            logger.debug(f"已完成动态任务次数: {index}")
+        logger.debug('"送祝福"任务已完成...')
+    except json.JSONDecodeError as e:
+        logger.debug('"签到"任务失败，Error：', e)
         input()
 
     # 每日动态
@@ -181,7 +199,6 @@ def job():
             comment_prise(comment_id=comment_id,
                             corpid=_corpid, cookies=_cookies)
             # sleep(delay)
-
             # business_delete(business_id=business_id,
             #                 corpid=_corpid, cookies=_cookies)
 
