@@ -47,9 +47,17 @@ pip install -r requirements.txt
 python run.py
 ```
 
+
 ### 实测截图
 
 ![图片标题](https://github.com/aiden2048/51vj-tools/blob/main/images/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20220606113410.png)
+
+
 ### 报错和解决
 
     欢迎在 Issues 中提交 bug (或新功能)描述，我会尽力改进
+
+
+### 免责声明
+* 本项目仅供个人学习与交流使用，严禁用于商业以及不良用途！！若读者将其用于非法用途，其造成的一切后果与本人无关
+* 如果有侵犯到您的权益，请第一时间联系个人邮箱处理
