@@ -27,6 +27,8 @@ from business.reader import reader
 from care.care_comment import care_comment
 from care.care_delete import care_delete
 
+from medal.medal_check import medal_check
+from medal.medal_reader import medal_reader
 
 from settings import (QRCODE_PATH, COOKIE_FILE_PATH, CORPID, JOB_NUMBER, BUSINESS_SEC_ID, BUSINESS_TYPE, CHANNEL_ID,
                         JOB_DELAY_TIME, JOB_HOUR, JOB_MINUTE, ROLE_PERSON_ID)
@@ -131,6 +133,9 @@ def login():
 
 
 def job():
+    # 每日任务
+    logger.debug("每日任务已开启...")
+
     _cookies = read_cookie(COOKIE_FILE_PATH)
     _corpid = CORPID
     delay = JOB_DELAY_TIME
@@ -150,23 +155,14 @@ def job():
         clear_cookie(COOKIE_FILE_PATH)
         input()
 
-    # 送祝福
-    staff_id = ROLE_PERSON_ID
-    logger.debug('"送祝福"任务已开启...')
     try:
-        for index in range(1, 3+1):
-            comment_id = care_comment(staff_id, _corpid, _cookies)
-            sleep(delay)
-            care_delete(comment_id, _corpid, _cookies)
-            logger.debug(f"已完成动态任务次数: {index}")
-        logger.debug('"送祝福"任务已完成...')
-    except json.JSONDecodeError as e:
-        logger.debug('"签到"任务失败，Error：', e)
-        input()
+        # 阅读勋章
+        medals = medal_check(corpid=_corpid, cookies=_cookies)
+        for medal_id in medals:
+            medal_reader(medal_id=medal_id, corpid=_corpid, cookies=_cookies)
 
-    # 每日动态
-    logger.debug("每日动态任务已开启...")
-    try:
+        # 每日动态
+        logger.debug("每日动态已开启...")
         for index in range(1, JOB_NUMBER+1):
             # 生成指定长度的随机字符串
             text = ''.join(random.sample(string.ascii_letters + string.digits, 20))
@@ -201,12 +197,27 @@ def job():
             # sleep(delay)
             # business_delete(business_id=business_id,
             #                 corpid=_corpid, cookies=_cookies)
-
             logger.debug(f"已完成动态任务次数: {index}")
 
+
+        # 送祝福
+        staff_id = ROLE_PERSON_ID
+        logger.debug('"送祝福" 已开启...')
+        # try:
+        for index in range(1, 3+1):
+            comment_id = care_comment(staff_id, _corpid, _cookies)
+            sleep(delay)
+            care_delete(comment_id, _corpid, _cookies)
+            logger.debug(f"已完成动态任务次数: {index}")
+        logger.debug('"送祝福"任务已完成...')
+        # except json.JSONDecodeError as e:
+        #     logger.debug('"签到"任务失败，Error：', e)
+        #     input()
+
+
     except json.JSONDecodeError as e:
-        logger.debug("每日动态任务失败，Error：", e)
-        clear_cookie(COOKIE_FILE_PATH)
+        logger.debug("执行任务失败，Error：", e)
+        # clear_cookie(COOKIE_FILE_PATH)
         input()
 
     logger.debug("每日任务, 已完成.")
@@ -216,7 +227,7 @@ def job():
 
 
 if __name__ == '__main__':
-
+    # job()
     logger.debug("==================== 程序启动...")
     if not read_file(COOKIE_FILE_PATH):
         logger.debug("登录状态: 检测到未登录...")
